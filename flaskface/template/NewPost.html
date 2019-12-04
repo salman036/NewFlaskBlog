@@ -1,0 +1,48 @@
+{% extends 'Layout.html' %}
+{% block app_content %}
+    <div class="media jumbotron hoverable p-4 mx-3 mb-5">
+        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+            <fieldset>
+                {{ form.hidden_tag() }}
+                <legend>{{ legend }}</legend>
+                <div class="form-group">
+                    {% if form.title.errors %}
+                        {{ form.title(class="form-control is-invalid z-depth-1", placeholder="Title") }}
+                        {% for error in form.title.errors %}
+                            <div class="alert-message block-message error">
+                            <span class="badge badge-danger">
+                                {{ error }}
+                            </span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.title(class="form-control z-depth-1", placeholder="Title") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {% if form.content.errors %}
+                        {{ form.content(class="form-control form-control-lg z-depth-1 is-invalid", placeholder="Title") }}
+                        {% for error in form.content.errors %}
+                            <div class="alert-message block-message error">
+                            <span class="badge badge-danger">
+                                {{ error }}
+                            </span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.content(class="form-control form-control-lg z-depth-1", placeholder="Content") }}
+                    {% endif %}
+                </div>
+            <div class="form-group">
+                <img id="blah" style="width: 200px; height: 200px"/>
+                {{ form.image_file(class="btn btn-primary", onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])") }}
+                </div>
+            </fieldset>
+            <center>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+            </center>
+        </form>
+    </div>
+{% endblock %}

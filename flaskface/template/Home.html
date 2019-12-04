@@ -1,0 +1,49 @@
+{% extends 'Layout.html' %}
+
+{% block app_content %}
+{% for post in posts.items %}
+<article class="media jumbotron hoverable p-4 mx-3 mb-5" id="forFade">
+    <a href="{{ url_for('static', filename='profile_pic/' + post.author.image_file) }}" target="_blank">
+        <img class="rounded-circle account-img"
+             src="{{ url_for('static', filename='profile_pic/' + post.author.image_file) }}">
+    </a>
+    <div class="media-body">
+        <div class="article-metadata">
+            {% set user_link %}
+            <span class="user_group">
+            <a class="article-title"
+               href="{{ url_for('user.user_posts', username=post.author.username) }}"
+               style="color: cadetblue">{{ post.author.username }}</a>
+                </span>
+            <small class="article-title">{{ post.create_at.strftime('%Y-%m-%d') }}</small>
+            {% endset %}
+            {{ _('%(username)s posted %(when)s', username=user_link, when=moment(post.create_at).fromNow()) }}
+        </div>
+        <h2>
+            <a class="article-title "
+               href="{{ url_for('post.post_detail', username=post.author.username, post_id=post.id) }}"
+            >{{ post.title }}</a>
+        </h2>
+        <p class="article-content" id="copyId">{{ post.content }}</p>
+        <a target="_blank" href="{{ url_for('static', filename='post_pic/' + post.image_file) }}"
+        >
+            <img class="rounded float-left" style="width: 100%; height: 500px;"
+                 src="{{ url_for('static', filename='post_pic/' + post.image_file) }}">
+        </a>
+        {% if post.my_language and post.my_language != g.locale %}
+            <br><br>
+            <a href="#">{{ _('Translate') }}</a>
+        {% endif %}
+        <div id="like_section">
+            {% include 'include/_LikeSection.html' %}
+        </div>
+
+
+    </div>
+
+</article>
+{% endfor %}
+{#    Pagination Start from here #}
+{% include 'include/_Paginations.html' %}
+{% endblock %}
+

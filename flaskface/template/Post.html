@@ -1,0 +1,82 @@
+{% extends 'Layout.html' %}
+{% block app_content %}
+
+{% if  user == current_user %}
+<article class="media content-section">
+    <img class="rounded-circle account-img"
+         src="{{ url_for('static', filename='profile_pic/'+ post.author.image_file) }}"
+    >
+    <div class="media-body">
+        <div class="article-metadata">
+            {% set user_link %}
+            <span class="user_group">
+            <a class="article-title"
+               href="{{ url_for('user.user_posts', username=post.author.username) }}"
+               style="color: cadetblue">{{ post.author.username }}</a>
+            </span>
+            <small class="article-title">{{ post.create_at.strftime('%Y-%m-%d') }}</small>
+            {% endset %}
+            {{ _('%(username)s said %(when)s', username=user_link, when=moment(post.create_at).fromNow()) }}
+        </div>
+        {% if post.author == current_user %}
+            <a class="btn btn-warning btn-rounded waves-effect waves-light"
+               href="{{ url_for('post.post_update', post_id=post.id) }}">Update</a>
+            <a class="btn btn-danger btn-rounded waves-effect waves-light mr-2" data-toggle="modal"
+               data-target="#deleteModal" href="">Delete</a>
+        {% endif %}
+        <h2><a class="article-title">{{ post.title }}</a></h2>
+        <p class="article-content" id="copyId">{{ post.content }}</p>
+        <div class="form-group">
+            <a href="{{ url_for('static', filename='post_pic/' + post.image_file) }}">
+                <img class="rounded float-left" style="width: 30%; height: 30%;"
+                     src="{{ url_for('static', filename='post_pic/' + post.image_file) }}">
+            </a>
+        </div>
+            {% include 'include/_CommentSection.html' %}
+
+    </div>
+</article>
+{% elif current_user.is_following(user) %}
+<article class="media content-section">
+    <img class="rounded-circle account-img"
+         src="{{ url_for('static', filename='profile_pic/'+ post.author.image_file) }}"
+    >
+    <div class="media-body">
+        <div class="article-metadata">
+            {% set user_link %}
+            <span class="user_group">
+            <a class="article-title"
+               href="{{ url_for('user.user_posts', username=post.author.username) }}"
+               style="color: cadetblue">{{ post.author.username }}</a>
+            </span>
+            <small class="article-title">{{ post.create_at.strftime('%Y-%m-%d') }}</small>
+            {% endset %}
+            {{ _('%(username)s said %(when)s', username=user_link, when=moment(post.create_at).fromNow()) }}
+        </div>
+        {% if post.author == current_user %}
+            <a class="btn btn-warning btn-rounded waves-effect waves-light"
+               href="{{ url_for('post.post_update', post_id=post.id) }}">Update</a>
+            <a class="btn btn-danger btn-rounded waves-effect waves-light mr-2" data-toggle="modal"
+               data-target="#deleteModal" href="">Delete</a>
+        {% endif %}
+        <h2><a class="article-title">{{ post.title }}</a></h2>
+        <p class="article-content" id="copyId">{{ post.content }}</p>
+        <button onclick="copyContent()">Copy</button>
+        <div class="form-group">
+            <a href="{{ url_for('static', filename='post_pic/' + post.image_file) }}">
+                <img class="rounded float-left" style="width: 30%; height: 30%;"
+                     src="{{ url_for('static', filename='post_pic/' + post.image_file) }}">
+            </a>
+        </div>
+        {% include 'include/_CommentSection.html' %}
+
+    </div>
+</article>
+{% else %}
+<h1>Not showing</h1>
+{% endif %}
+<!-- DeleteModal -->
+{% include 'models/deleteModels.html' %}
+<!--ModelDetail-->
+
+{% endblock %}

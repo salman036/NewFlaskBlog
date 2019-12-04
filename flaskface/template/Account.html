@@ -1,0 +1,43 @@
+{% extends 'Layout.html' %}
+
+{% block app_content %}
+
+<table>
+    <tr valign="top">
+        <td><img class="account-img" src="{{ url_for('static', filename='profile_pic/' + user.image_file) }}"></td>
+        <td>
+            <div class="article-metadata">
+
+            <span class="user_group">
+            <a class="article-title"
+               style="color: cadetblue">{{ user.username }}</a>
+            </span>
+
+            </div>
+            {% set user_link %}
+            <span class="user_group">
+                <h1><a href="" style="color: cadetblue">{{ user.username }}</a></h1>
+
+            </span>
+            {% endset %}
+            {% if user.about_me %}
+                <p>{{ user.about_me }}</p>
+            {% endif %}
+            {% if user.last_seen %}<p>Last seen on: {{ moment(user.last_seen).format('LLL') }}</p>{% endif %}
+            <p>{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
+            {% if user == current_user %}
+                <p><a href="{{ url_for('user.edit_profile') }}">Edit your profile</a></p>
+            {% elif not current_user.is_following(user) %}
+                <p><a href="{{ url_for('user.follow', username=user.username) }}">Follow</a></p>
+            {% else %}
+                <p><a href="{{ url_for('user.unfollow', username=user.username) }}">Unfollow</a></p>
+            {% endif %}
+            {% if user != current_user %}
+                <p>
+                    <a href="{{ url_for('user.send_message', recipient=user.username) }}">{{ _('Send private message') }}</a>
+                </p>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endblock %}
